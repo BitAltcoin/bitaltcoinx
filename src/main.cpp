@@ -2595,7 +2595,7 @@ bool LoadBlockIndex(bool fAllowNew)
     }
     else
     {
-        bnTrustedModulus.SetHex("00012a40504c2054696d65732031332f30332f32303136204a696d6d7920446561646a696d2c204d2c2041737472616ce280997320566973696f6e6172792c205475726e732058");
+        bnTrustedModulus.SetHex("bd1286ed45d59f18ec4006bd28f2e9e9a4fd31b5b1fc3e016655dd432abf3a8a");
     }
 
 
@@ -2626,8 +2626,8 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1457894130;
-        block.nBits    = 0x203fffff;
+        block.nTime    = txNew.nTime;
+        block.nBits    = bnProofOfWorkLimit.GetCompact();
         block.nNonce   = 345219519;
         if(fTestNet)
         {
@@ -2655,7 +2655,7 @@ bool LoadBlockIndex(bool fAllowNew)
         printf("block.nNonce = %u \n", block.nNonce);
 
         //// debug print
-        assert(block.hashMerkleRoot == uint256("0xbd8b05c26c92513006c4322978533e2306f165cbc66ea7fa33d37733d37739690dc9ee"));
+        assert(block.hashMerkleRoot == uint256("bd8b05c26c92513006c4322978533e2306f165cbc66ea7fa33d37733d37739690dc9ee"));
         block.print();
         assert(block.GetHash() == (!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
         assert(block.CheckBlock());
