@@ -38,7 +38,6 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x00000981bade6c9e64ee03d2e25b3c4701c417af4f5c8b3611fffe8d22b1668c");
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 CBigNum bnProofOfWorkLimit(~uint256(0) >> 2); // PoW starting difficulty = 0.00002441
@@ -978,16 +977,16 @@ uint256 WantedByOrphan(const CBlock* pblockOrphan)
 int64_t GetProofOfWorkReward(int64_t nFees)
 {
     if (pindexBest->nHeight == 1){
-        int64_t nSubsidy = 400000 * COIN;
+        int64_t nSubsidy = 1000000 * COIN;
         return nSubsidy + nFees;
     } else if (pindexBest->nHeight > 640400 && pindexBest->nHeight <= 641250 ) {
-        int64_t nSubsidy = 1.301 * COIN; // V2 PoW reward plus fees coverage, based on 2 minute blocks
+        int64_t nSubsidy = 5.301 * COIN; // V2 PoW reward plus fees coverage, based on 2 minute blocks
         return nSubsidy + nFees;
     } else if (pindexBest->nHeight > 641250) {
-        int64_t nSubsidy = 1.31 * COIN; // PoW adjustment to cover extra fees if needed
+        int64_t nSubsidy = 5.31 * COIN; // PoW adjustment to cover extra fees if needed
         return nSubsidy + nFees;
     } else {
-        int64_t nSubsidy = 515 * COIN;
+        int64_t nSubsidy = 50 * COIN;
         return nSubsidy + nFees;
     }
 }
@@ -1014,11 +1013,11 @@ unsigned int ComputeMaxBits(CBigNum bnTargetLimit, unsigned int nBase, int64_t n
 {
     CBigNum bnResult;
     bnResult.SetCompact(nBase);
-    bnResult *= 2;
+    bnResult *= 4;
     while (nTime > 0 && bnResult < bnTargetLimit)
     {
-        // Maximum 200% adjustment per day...
-        bnResult *= 2;
+        // Maximum 400% adjustment per day...
+        bnResult *= 4;
         nTime -= 24 * 60 * 60;
     }
     if (bnResult > bnTargetLimit)
@@ -2621,15 +2620,14 @@ bool LoadBlockIndex(bool fAllowNew)
         txNew.vin.resize(1);
         txNew.vout.resize(1);
         txNew.vin[0].scriptSig = CScript() << 0 << CBigNum(42) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
-        txNew.vout[0].nValue = 50 * COIN;
-        txNew.vout[0].scriptPubKey = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
+        txNew.vout[0].SetEmpty();
         CBlock block;
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
-        block.hashMerkleRoot = 43915abceef29dc5025569a07f290c06708fdd51b459d392ae911c595ab282ec;
+        block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
         block.nTime    = txNew.nTime;
-        block.nBits    = 0x1e0ffff0;
+        block.nBits    = bnProofOfWorkLimit.GetCompact();
         block.nNonce   = 345219519;
         if(fTestNet)
         {
