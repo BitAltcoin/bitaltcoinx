@@ -38,6 +38,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
+uint256 hashGenesisBlock("0x00000981bade6c9e64ee03d2e25b3c4701c417af4f5c8b3611fffe8d22b1668c");
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 CBigNum bnProofOfWorkLimit(~uint256(0) >> 2); // PoW starting difficulty = 0.00002441
@@ -2620,18 +2621,19 @@ bool LoadBlockIndex(bool fAllowNew)
         txNew.vin.resize(1);
         txNew.vout.resize(1);
         txNew.vin[0].scriptSig = CScript() << 0 << CBigNum(42) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
-        txNew.vout[0].SetEmpty();
+        txNew.vout[0].nValue = 50 * COIN;
+        txNew.vout[0].scriptPubKey = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         CBlock block;
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
-        block.hashMerkleRoot = block.BuildMerkleTree();
+        block.hashMerkleRoot = 43915abceef29dc5025569a07f290c06708fdd51b459d392ae911c595ab282ec;
         block.nVersion = 1;
         block.nTime    = txNew.nTime;
-        block.nBits    = bnProofOfWorkLimit.GetCompact();
+        block.nBits    = 0x1e0ffff0;
         block.nNonce   = 345219519;
         if(fTestNet)
         {
-            block.nNonce   = 345219519;
+            block.nNonce   = 345463800;
         }
         if (false  && (block.GetHash() != hashGenesisBlock)) {
 
@@ -2672,7 +2674,7 @@ bool LoadBlockIndex(bool fAllowNew)
             return error("LoadBlockIndex() : failed to init sync checkpoint");
     }
 
-    string strPubKey = "";
+    string strPubKey = "04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f";
 
     // if checkpoint master key changed must reset sync-checkpoint
     if (!txdb.ReadCheckpointPubKey(strPubKey) || strPubKey != CSyncCheckpoint::strMasterPubKey)
