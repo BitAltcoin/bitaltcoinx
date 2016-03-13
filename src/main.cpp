@@ -2627,7 +2627,7 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
         block.nTime    = 1457894130;
-        block.nBits    = bnProofOfWorkLimit.GetCompact();
+        block.nBits    = 0x203fffff;
         block.nNonce   = 345219519;
         if(fTestNet)
         {
@@ -2655,7 +2655,7 @@ bool LoadBlockIndex(bool fAllowNew)
         printf("block.nNonce = %u \n", block.nNonce);
 
         //// debug print
-        assert(block.hashMerkleRoot == uint256("bd8b05c26c92513006c4322978533e2306f165cbc66ea7fa33d37733d37739690dc9ee"));
+        assert(block.hashMerkleRoot == uint256("0xbd8b05c26c92513006c4322978533e2306f165cbc66ea7fa33d37733d37739690dc9ee"));
         block.print();
         assert(block.GetHash() == (!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
         assert(block.CheckBlock());
@@ -2672,7 +2672,7 @@ bool LoadBlockIndex(bool fAllowNew)
             return error("LoadBlockIndex() : failed to init sync checkpoint");
     }
 
-    string strPubKey = "04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f";
+    string strPubKey = "";
 
     // if checkpoint master key changed must reset sync-checkpoint
     if (!txdb.ReadCheckpointPubKey(strPubKey) || strPubKey != CSyncCheckpoint::strMasterPubKey)
