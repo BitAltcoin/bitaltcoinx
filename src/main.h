@@ -25,26 +25,26 @@ class CInv;
 class CRequestTracker;
 class CNode;
 
-static const int LAST_OLD_POS_BLOCK = 641250;
-static const unsigned int MAX_BLOCK_SIZE = 1000000;
-static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/2;
+static const int LAST_OLD_POS_BLOCK = 320625;
+static const unsigned int MAX_BLOCK_SIZE = 256000;
+static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/4;
 static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
 static const unsigned int MAX_ORPHAN_TRANSACTIONS = MAX_BLOCK_SIZE/100;
 static const unsigned int MAX_INV_SZ = 50000;
-static const int64_t MIN_TX_FEE = 10000;
+static const int64_t MIN_TX_FEE = 50000;
 static const int64_t MIN_RELAY_TX_FEE = MIN_TX_FEE;
-static const int64_t MAX_MONEY = 400000000 * COIN;
+static const int64_t MAX_MONEY = 1000000000 * COIN;
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
-static const int64_t COIN_YEAR_REWARD = 1 * CENT; // 1% per year
-static const int64_t POS_STAKE_REWARD = 0.1 * COIN; // 10% annual interest
-static const int V2_CHAIN_PARAMS_TIME = 1457136000; // V2 chain switch, Sat, 05 Mar 2016 00:00:00 GMT
+static const int64_t COIN_YEAR_REWARD = 35 * CENT; // 35% per year
+static const int64_t POS_STAKE_REWARD = 0.5 * COIN; // 50% annual interest
+static const int V2_CHAIN_PARAMS_TIME = 1457894130; // V1 chain switch, 13 Mar 2016
 
-#define FOUNDATION "BKqAh5ojyS7bkjaDHJEWXxMwKNUvUsNZak"
-#define FOUNDATION_TEST "myLSiixUQwdiGGvmSvZBNBHR7C8bmMkBdr"
+#define FOUNDATION "Adres Portfela"
+#define FOUNDATION_TEST "Adres Portfela Testowego"
 
 inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 // Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp.
-static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
+static const unsigned int LOCKTIME_THRESHOLD = 100000000; // Tue Nov  5 00:53:20 1985 UTC
 
 #ifdef USE_UPNP
 static const int fHaveUPnP = true;
@@ -54,19 +54,19 @@ static const int fHaveUPnP = false;
 
 inline int64_t PastDrift(int64_t nTime)   {
     if (nTime < V2_CHAIN_PARAMS_TIME){
-        return nTime - 24 * 60 * 60;
+        return nTime - 12 * 60 * 60;
         }
     else {
-        return nTime - 10 * 60; // New time drift maximum
+        return nTime - 5 * 60; // New time drift maximum
         }
 }
 
 inline int64_t FutureDrift(int64_t nTime) {
     if (nTime < V2_CHAIN_PARAMS_TIME){
-        return nTime + 24 * 60 * 60;
+        return nTime + 12 * 60 * 60;
         }
     else {
-        return nTime + 10 * 60; // New time drift maximum
+        return nTime + 5 * 60; // New time drift maximum
         }
 }
 
@@ -544,7 +544,7 @@ public:
 
     bool IsCoinStake() const
     {
-        // boostcoin: the coin stake transaction is marked with the first output empty
+        // bitaltcoinx: the coin stake transaction is marked with the first output empty
         return (vin.size() > 0 && (!vin[0].prevout.IsNull()) && vout.size() >= 2 && vout[0].IsEmpty());
     }
 
@@ -708,7 +708,7 @@ public:
     bool ClientConnectInputs();
     bool CheckTransaction() const;
     bool AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs=true, bool* pfMissingInputs=NULL);
-    bool GetCoinAge(CTxDB& txdb, uint64_t& nCoinAge) const;  // boostcoin: get transaction coin age
+    bool GetCoinAge(CTxDB& txdb, uint64_t& nCoinAge) const;  // bitaltcoinx: get transaction coin age
 
 protected:
     const CTxOut& GetOutputFor(const CTxIn& input, const MapPrevTx& inputs) const;
@@ -860,7 +860,7 @@ public:
     // network and disk
     std::vector<CTransaction> vtx;
 
-    // boostcoin: block signature - signed by one of the coin base txout[N]'s owner
+    // bitaltcoinx: block signature - signed by one of the coin base txout[N]'s owner
     std::vector<unsigned char> vchBlockSig;
 
     // memory only
@@ -940,7 +940,7 @@ public:
         return nEntropyBit;
     }
 
-    // boostcoin: two types of block: proof-of-work or proof-of-stake
+    // bitaltcoinx: two types of block: proof-of-work or proof-of-stake
     bool IsProofOfStake() const
     {
         return (vtx.size() > 1 && vtx[1].IsCoinStake());
@@ -956,7 +956,7 @@ public:
         return IsProofOfStake()? std::make_pair(vtx[1].vin[0].prevout, vtx[1].nTime) : std::make_pair(COutPoint(), (unsigned int)0);
     }
 
-    // boostcoin: get max transaction timestamp
+    // bitaltcoinx: get max transaction timestamp
     int64_t GetMaxTransactionTime() const
     {
         int64_t maxTransactionTime = 0;
@@ -1099,7 +1099,7 @@ public:
     bool AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const uint256& hashProofOfStake);
     bool CheckBlock(bool fCheckPOW=true, bool fCheckMerkleRoot=true, bool fCheckSig=true) const;
     bool AcceptBlock();
-    bool GetCoinAge(uint64_t& nCoinAge) const; // boostcoin: calculate total coin age spent in block
+    bool GetCoinAge(uint64_t& nCoinAge) const; // bitaltcoinx: calculate total coin age spent in block
     bool SignBlock(CWallet& keystore, int64_t nFees);
     bool CheckBlockSignature() const;
 
@@ -1127,13 +1127,13 @@ public:
     CBlockIndex* pnext;
     unsigned int nFile;
     unsigned int nBlockPos;
-    uint256 nChainTrust; // boostcoin: trust score of block chain
+    uint256 nChainTrust; // bitaltcoinx: trust score of block chain
     int nHeight;
 
     int64_t nMint;
     int64_t nMoneySupply;
 
-    unsigned int nFlags;  // boostcoin: block index flags
+    unsigned int nFlags;  // bitaltcoinx: block index flags
     enum  
     {
         BLOCK_PROOF_OF_STAKE = (1 << 0), // is proof-of-stake block
