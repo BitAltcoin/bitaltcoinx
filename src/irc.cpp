@@ -189,7 +189,7 @@ bool GetIPFromIRC(SOCKET hSocket, string strMyName, CNetAddr& ipRet)
 void ThreadIRCSeed(void* parg)
 {
     // Make this thread recognisable as the IRC seeding thread
-    RenameThread("boostcoin-ircseed");
+    RenameThread("bitaltcoinx-ircseed");
 
     try
     {
@@ -302,10 +302,10 @@ void ThreadIRCSeed2(void* parg)
         }
 
         if (fTestNet) {
-            Send(hSocket, "JOIN #BoostCoinTEST\r");
-            Send(hSocket, "WHO #BoostCoinTEST\r");
+            Send(hSocket, "JOIN #BitAltcoinXTEST\r");
+            Send(hSocket, "WHO #BitAltcoinXTEST\r");
         } else {
-            // randomly join #boostcoin00-#boostcoin05
+            // randomly join #bitaltcoinx00-#bitaltcoinx05
             //int channel_number = GetRandInt(5);
             int channel_number = 0;
             // Channel number is always 0 for initial release
