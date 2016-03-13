@@ -380,7 +380,7 @@ bool GetMyExternalIP(CNetAddr& ipRet)
 
             pszGet = "GET / HTTP/1.1\r\n"
                      "Host: checkip.dyndns.org\r\n"
-                     "User-Agent: BoostCoin\r\n"
+                     "User-Agent: BitAltcoinX\r\n"
                      "Connection: close\r\n"
                      "\r\n";
 
@@ -399,7 +399,7 @@ bool GetMyExternalIP(CNetAddr& ipRet)
 
             pszGet = "GET /simple/ HTTP/1.1\r\n"
                      "Host: www.showmyip.com\r\n"
-                     "User-Agent: BoostCoin\r\n"
+                     "User-Agent: BitAltcoinX\r\n"
                      "Connection: close\r\n"
                      "\r\n";
 
@@ -416,7 +416,7 @@ bool GetMyExternalIP(CNetAddr& ipRet)
 void ThreadGetMyExternalIP(void* parg)
 {
     // Make this thread recognisable as the external IP detection thread
-    RenameThread("boostcoin-ext-ip");
+    RenameThread("bitaltcoinx-ext-ip");
 
     CNetAddr addrLocalHost;
     if (GetMyExternalIP(addrLocalHost))
@@ -640,7 +640,7 @@ void CNode::copyStats(CNodeStats &stats)
 void ThreadTorNet(void* parg)
 {
     // Make this thread recognisable as the connection opening thread
-    RenameThread("boostcoin-tornet");
+    RenameThread("bitaltcoinx-tornet");
 
     try
     {
@@ -675,7 +675,7 @@ void ThreadTorNet2(void* parg) {
 void ThreadSocketHandler(void* parg)
 {
     // Make this thread recognisable as the networking thread
-    RenameThread("boostcoin-net");
+    RenameThread("bitaltcoinx-net");
 
     try
     {
@@ -1029,7 +1029,7 @@ void ThreadSocketHandler2(void* parg)
 void ThreadMapPort(void* parg)
 {
     // Make this thread recognisable as the UPnP thread
-    RenameThread("boostcoin-UPnP");
+    RenameThread("bitaltcoinx-UPnP");
 
     try
     {
@@ -1089,7 +1089,7 @@ void ThreadMapPort2(void* parg)
                     printf("UPnP: GetExternalIPAddress failed.\n");
             }
         }
-        string strDesc = "BoostCoin " + FormatFullVersion();
+        string strDesc = "BitAltcoinX " + FormatFullVersion();
 #ifndef UPNPDISCOVER_SUCCESS
         /* miniupnpc 1.5 */
         r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
@@ -1209,7 +1209,7 @@ static const char *strMainNetOnionSeed[][1] = {
 void ThreadDNSAddressSeed(void* parg)
 {
     // Make this thread recognisable as the DNS seeding thread
-    RenameThread("boostcoin-dnsseed");
+    RenameThread("bitaltcoinx-dnsseed");
 
     try
     {
@@ -1264,7 +1264,7 @@ void ThreadDNSAddressSeed2(void* parg)
 void ThreadOnionSeed(void* parg)
 {
     // Make this thread recognisable as the DNS seeding thread
-    RenameThread("boostcoin-dnsseed");
+    RenameThread("bitaltcoinx-dnsseed");
 
     try
     {
@@ -1356,7 +1356,7 @@ void ThreadDumpAddress2(void* parg)
 void ThreadDumpAddress(void* parg)
 {
     // Make this thread recognisable as the address dumping thread
-    RenameThread("boostcoin-adrdump");
+    RenameThread("bitaltcoinx-adrdump");
 
     try
     {
@@ -1371,7 +1371,7 @@ void ThreadDumpAddress(void* parg)
 void ThreadOpenConnections(void* parg)
 {
     // Make this thread recognisable as the connection opening thread
-    RenameThread("boostcoin-opencon");
+    RenameThread("bitaltcoinx-opencon");
 
     try
     {
@@ -1552,7 +1552,7 @@ void ThreadOpenConnections2(void* parg)
 void ThreadOpenAddedConnections(void* parg)
 {
     // Make this thread recognisable as the connection opening thread
-    RenameThread("boostcoin-opencon");
+    RenameThread("bitaltcoinx-opencon");
 
     try
     {
@@ -1683,7 +1683,7 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
 void ThreadMessageHandler(void* parg)
 {
     // Make this thread recognisable as the message handling thread
-    RenameThread("boostcoin-msghand");
+    RenameThread("bitaltcoinx-msghand");
 
     try
     {
@@ -1851,7 +1851,7 @@ bool BindListenPort(const CService &addrBind, string& strError)
     {
         int nErr = WSAGetLastError();
         if (nErr == WSAEADDRINUSE)
-            strError = strprintf(_("Unable to bind to %s on this computer. BoostCoin is probably already running."), addrBind.ToString().c_str());
+            strError = strprintf(_("Unable to bind to %s on this computer. BitAltcoinX is probably already running."), addrBind.ToString().c_str());
         else
             strError = strprintf(_("Unable to bind to %s on this computer (bind returned error %d, %s)"), addrBind.ToString().c_str(), nErr, strerror(nErr));
         printf("%s\n", strError.c_str());
@@ -1940,7 +1940,7 @@ void StartTor(void* parg)
 void StartNode(void* parg)
 {
     // Make this thread recognisable as the startup thread
-    RenameThread("boostcoin-start");
+    RenameThread("bitaltcoinx-start");
 
     if (semOutbound == NULL) {
         // initialize semaphore
